@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imóveis - SQN 212</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background-color: #fff;
+            border-bottom: 3px solid #005a9c;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 18px;
+            color: #005a9c;
+            font-weight: bold;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            border: none;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .header-btn:hover {
+            color: #005a9c;
+        }
+
+        .cadastrar-btn {
+            background-color: #000;
+            color: #fff !important;
+            padding: 8px 20px;
+        }
+
+        .cadastrar-btn:hover {
+            background-color: #333;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background-color: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .alert-banner p {
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .alert-banner a {
+            color: #005a9c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Property Card */
+        .property-card {
+            background-color: #fff;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: row;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .property-image {
+            width: 400px;
+            height: 280px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .property-details {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .property-title {
+            color: #005a9c;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .property-info {
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            min-width: 100px;
+            color: #555;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .property-footer {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            background-color: #005a9c;
+            color: #fff;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .contact-btn:hover {
+            background-color: #004080;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #004080;
+            color: #fff;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-links {
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .property-card {
+                flex-direction: column;
+            }
+
+            .property-image {
+                width: 100%;
+                height: 250px;
+            }
+
+            .property-details {
+                padding: 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-buttons {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">www.agi.com.br</div>
+            <div class="header-buttons">
+                <a href="#" class="header-btn">ACOMPANHAR PEDIDO</a>
+                <a href="#" class="header-btn">REGISTRADO NO CARTÓRIO</a>
+                <a href="#" class="header-btn">IMÓVEIS CONFISCADOS</a>
+                <a href="#" class="header-btn cadastrar-btn">CADASTRAR/ENTRAR</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Alert Banner -->
+    <div class="alert-banner">
+        <p>O Seminário para a participação não concordantes no cadastro oficial estará disponível na plataforma <a href="#">SSG/SICA/PLANI/4 (09/03/2020)</a> e a partir das 08h, quericamente disponível aos interessados ante às 13h.</p>
+        <p>Para ter fazeres destinados, o informativo ficará disponível para acesso/retomada.</p>
+        <p>Chamamos que as informações fazem atenção do ingles para a participação nos concordantes do cadastro oficial.</p>
+        <p>Obter ou formar informações para a consulta regular.</p>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Property 1 -->
+        <div class="property-card">
+            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=280&fit=crop" alt="SQN 212 BL D AP 603" class="property-image">
+            <div class="property-details">
+                <h2 class="property-title">SQN 212 BL D AP 603</h2>
+                <div class="property-info">
+                    <div class="info-row">
+                        <span class="info-label">Valor:</span>
+                        <span class="info-value">R$ 1.740,00</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Quartos:</span>
+                        <span class="info-value">03</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tamanho:</span>
+                        <span class="info-value">74,30 m²</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Garagem:</span>
+                        <span class="info-value">01</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Localidade:</span>
+                        <span class="info-value">Asa Norte</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Caract/ativid.:</span>
+                        <span class="info-value">conforto com administradora</span>
+                    </div>
+                </div>
+                <div role="presentation" class="property-footer">
+                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUNDEzTkxDNUozMk5XMlY5S0NTT0RQNERaSS4u" class="contact-btn">Pré-reservar para o Cadastro Síndico</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property 2 -->
+        <div class="property-card">
+            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=280&fit=crop" alt="SQN 212 BL I AP 205" class="property-image">
+            <div class="property-details">
+                <h2 class="property-title">SQN 212 BL I AP 205</h2>
+                <div class="property-info">
+                    <div class="info-row">
+                        <span class="info-label">Valor:</span>
+                        <span class="info-value">R$ 1.320,00</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Quartos:</span>
+                        <span class="info-value">03</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tamanho:</span>
+                        <span class="info-value">74,03 m²</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Garagem:</span>
+                        <span class="info-value">01</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Localidade:</span>
+                        <span class="info-value">Asa Norte</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Caract/ativid.:</span>
+                        <span class="info-value">conforto com administradora</span>
+                    </div>
+                </div>
+                <div role="presentation" class="property-footer">
+                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUMkRNQ0ExNFpMMkJBREFVMzFUSTRLRE5aTS4u" class="contact-btn">Pré-reservar para o Cadastro Síndico</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property 3 -->
+        <div class="property-card">
+            <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&h=280&fit=crop" alt="SQN 212 BL I AP 309" class="property-image">
+            <div class="property-details">
+                <h2 class="property-title">SQN 212 BL I AP 309</h2>
+                <div class="property-info">
+                    <div class="info-row">
+                        <span class="info-label">Valor:</span>
+                        <span class="info-value">R$ 1.320,00</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Quartos:</span>
+                        <span class="info-value">03</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tamanho:</span>
+                        <span class="info-value">74,03 m²</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Garagem:</span>
+                        <span class="info-value">01</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Localidade:</span>
+                        <span class="info-value">Asa Norte</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Caract/ativid.:</span>
+                        <span class="info-value">conforto com administradora</span>
+                    </div>
+                </div>
+                <div role="presentation" class="property-footer">
+                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUMDMxQTlOOFpSUTUxT0JTNVFGOEZFNzdZMS4u" class="contact-btn">Pré-reservar para o Cadastro Síndico</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property 4 -->
+        <div class="property-card">
+            <img src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&h=280&fit=crop" alt="SQN 214 BL A AP 301" class="property-image">
+            <div class="property-details">
+                <h2 class="property-title">SQN 214 BL A AP 301</h2>
+                <div class="property-info">
+                    <div class="info-row">
+                        <span class="info-label">Valor:</span>
+                        <span class="info-value">R$ 1.577,16</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Quartos:</span>
+                        <span class="info-value">03</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tamanho:</span>
+                        <span class="info-value">R$ 74,30 m²</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Garagem:</span>
+                        <span class="info-value">01</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Localidade:</span>
+                        <span class="info-value">Asa Norte</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Caract/ativid.:</span>
+                        <span class="info-value">conforto com administradora</span>
+                    </div>
+                </div>
+                <div role="presentation" class="property-footer">
+                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUN09OSVE0MUFRMkJTMDUyQlFWTEhITklUSC4u" class="contact-btn">Pré-reservar para o Cadastro Síndico</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>Secretaria de Regularização Imobiliária - SRI</p>
+            <p>Área Norte, SGAN, Conjunto Setor Bairro Amarantina, edificio agi.com.br</p>
+            <div class="footer-links">
+                <a href="#">Termos de uso</a> | 
+                <a href="#">Política de privacidade</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

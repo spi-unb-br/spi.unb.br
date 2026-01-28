@@ -3,18 +3,23 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+
 import time
+from extrair_form import extrair_formularios
 
 # ================= CONFIGURAÇÃO =================
-BASE_URL = "https://sites.google.com/view/spi-imoveis/com-cadastro-virtual"
+# BASE_URL = "https://sites.google.com/view/spi-imoveis/com-cadastro-virtual"
+BASE_URL = "http://127.0.0.1:5500/html/index.html"
 
 # Links de teste dos formulários (simulando os botões)
-FORMULARIOS = [
-    "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUNDEzTkxDNUozMk5XMlY5S0NTT0RQNERaSS4u",
-    "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUMkRNQ0ExNFpMMkJBREFVMzFUSTRLRE5aTS4u",
-    "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUMDMxQTlOOFpSUTUxT0JTNVFGOEZFNzdZMS4u",
-    "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUN09OSVE0MUFRMkJTMDUyQlFWTEhITklUSC4u"
-]
+# FORMULARIOS = [
+#     "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUNDEzTkxDNUozMk5XMlY5S0NTT0RQNERaSS4u",
+#     "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUMkRNQ0ExNFpMMkJBREFVMzFUSTRLRE5aTS4u",
+#     "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUMDMxQTlOOFpSUTUxT0JTNVFGOEZFNzdZMS4u",
+#     "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUN09OSVE0MUFRMkJTMDUyQlFWTEhITklUSC4u"
+# ]
+
 
 # Dados para preencher
 DADOS = [
@@ -27,18 +32,31 @@ DADOS = [
 ]
 # ===============================================
 
-service = Service()
+# service = Service()
+# options = webdriver.ChromeOptions()
+
 options = webdriver.ChromeOptions()
+    
+# Instala automaticamente o chromedriver correto
+driver = webdriver.Chrome(
+    service=Service(ChromeDriverManager().install()),
+    options=options
+    )
+
 options.add_argument("--start-maximized")
 
-driver = webdriver.Chrome(service=service, options=options)
+# driver = webdriver.Chrome(service=service, options=options)
 wait = WebDriverWait(driver, 30)
 
 try:
     print("🟢 Abrindo página base do Google Sites...")
     driver.get(BASE_URL)
+    time.sleep(1)
     wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
     time.sleep(1)
+    
+    FORMULARIOS = extrair_formularios(driver, BASE_URL) 
+    print(f"🟢 {len(FORMULARIOS)} formulários extraídos.")
 
     # Itera pelos formulários
     for i, form_url in enumerate(FORMULARIOS, start=1):
