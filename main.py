@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 import time
-from extrair_form import extrair_formularios
+from extrair_form_xpath import extrair_formularios
 
 # ================= CONFIGURAÇÃO =================
 # BASE_URL = "https://sites.google.com/view/spi-imoveis/com-cadastro-virtual"
