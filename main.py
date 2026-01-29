@@ -48,8 +48,8 @@ try:
     wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
     time.sleep(1)
     
-    FORMS = form_extract(driver, BASE_URL) 
-    print(f"🟢 {len(FORMS)} formulários extraídos.")
+    # FORMS = form_extract(driver, BASE_URL) 
+    # print(f"🟢 {len(FORMS)} formulários extraídos.")
     
     
     ### Comparar os dados 
@@ -70,9 +70,12 @@ try:
             
             
     def verificar_e_executar():
-        dados = ler_dados()
+        driver.refresh()
         
         FORMS = form_extract(driver, BASE_URL) 
+        print(f"🟢 {len(FORMS)} formulários extraídos.")
+        
+        dados = ler_dados()
         link_atual = FORMS[0]  # Supondo que o primeiro link seja o relevante
         
         print(f"Dados lidos: {dados} \n\n")
