@@ -4,27 +4,28 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def extrair_formularios(driver, base_url):
-    """
-    Extrai os links dos formulários da página
-    """
+    
+# Extrai os links dos formulários da página
+    
+    
+def form_extract(driver, base_url):
+
     # Acessar a página base
     driver.get(base_url)
     
     # Aguardar a página carregar completamente
-    time.sleep(3)  # Ajuste conforme necessário
+    time.sleep(3)
     
-    # Encontrar todas as divs com role="presentation" que contêm os links
+    # Buscar os links dos formulários
     try:
         # Aguardar os elementos estarem presentes
         WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'div[role="presentation"]'))
         )
         
-        # Extrair todos os links dentro dessas divs
-        formularios = []
+        forms = []
         
-        # Buscar pela div com role="presentation" e depois o link dentro dela
+        # Buscar pela div com role="presentation"
         divs_presentation = driver.find_elements(By.CSS_SELECTOR, 'div[role="presentation"]')
         
         for div in divs_presentation:
@@ -35,12 +36,12 @@ def extrair_formularios(driver, base_url):
                 
                 # Verificar se é um link de formulário do Google/Office Forms
                 if href and ('forms.office.com' in href or 'forms.google.com' in href):
-                    formularios.append(href)
+                    forms.append(href)
                     print(f"Formulário encontrado: {href}\n")
             except:
                 continue
         
-        return formularios
+        return forms
         
     except Exception as e:
         print(f"Erro ao extrair formulários: {e}")

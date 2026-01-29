@@ -5,20 +5,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
+import json
+import os
 import time
-from extrair_form_xpath import extrair_formularios
+from datetime import datetime
+
+from form_extract import form_extract
 
 # ================= CONFIGURAÇÃO =================
 # BASE_URL = "https://sites.google.com/view/spi-imoveis/com-cadastro-virtual"
 BASE_URL = "http://127.0.0.1:5500/html/index.html"
-
-# Links de teste dos formulários (simulando os botões)
-# FORMULARIOS = [
-#     "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUNDEzTkxDNUozMk5XMlY5S0NTT0RQNERaSS4u",
-#     "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUMkRNQ0ExNFpMMkJBREFVMzFUSTRLRE5aTS4u",
-#     "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUMDMxQTlOOFpSUTUxT0JTNVFGOEZFNzdZMS4u",
-#     "https://forms.office.com/Pages/ResponsePage.aspx?id=h7AshbEn8k6d6XnH7IOQsV1sPT3CUK9NovOoG_WqCMtUN09OSVE0MUFRMkJTMDUyQlFWTEhITklUSC4u"
-# ]
 
 
 # Dados para preencher
@@ -30,10 +26,7 @@ DADOS = [
     "991748889",
     "61"
 ]
-# ===============================================
 
-# service = Service()
-# options = webdriver.ChromeOptions()
 
 options = webdriver.ChromeOptions()
     
@@ -55,42 +48,94 @@ try:
     wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
     time.sleep(1)
     
-    FORMULARIOS = extrair_formularios(driver, BASE_URL) 
-    print(f"🟢 {len(FORMULARIOS)} formulários extraídos.")
+    FORMS = form_extract(driver, BASE_URL) 
+    print(f"🟢 {len(FORMS)} formulários extraídos.")
+    
+    
+    ### Comparar os dados 
+    
+    def ler_dados(arquivo='dados.json'):
+        if os.path.exists(arquivo):
+            with open(arquivo, 'r') as f:
+                return json.load(f)
+        return {'ultimo_link': None, 'ultima_atualizacao': None}
+    
+    def salvar_dados(link, arquivo='dados.json'):
+        dados = {
+            'ultimo_link': link,
+            'ultima_atualizacao': datetime.now().isoformat()
+        }
+        with open(arquivo, 'w') as f:
+            json.dump(dados, f, indent=2)
+            
+            
+    def verificar_e_executar():
+        dados = ler_dados()
+        
+        FORMS = form_extract(driver, BASE_URL) 
+        link_atual = FORMS[0]  # Supondo que o primeiro link seja o relevante
+        
+        print(f"Dados lidos: {dados} \n\n")
+        print(f"Link atual: {link_atual}")
+        
+        if link_atual != dados['ultimo_link']:
+            
+            print(f"Novo link encontrado em {datetime.now()}")
+            # Itera pelos formulários
+            for i, form_url in enumerate(FORMS, start=1):
+                print(f"🟢 Processando formulário {i}")
 
-    # Itera pelos formulários
-    for i, form_url in enumerate(FORMULARIOS, start=1):
-        print(f"🟢 Processando formulário {i}")
+                # 1️⃣ Abrir nova aba com o formulário
+                driver.execute_script("window.open(arguments[0], '_blank');", form_url)
+                driver.switch_to.window(driver.window_handles[-1])
 
-        # 1️⃣ Abrir nova aba com o formulário
-        driver.execute_script("window.open(arguments[0], '_blank');", form_url)
-        driver.switch_to.window(driver.window_handles[-1])
+                # 2️⃣ Preencher o formulário
+                inputs = wait.until(
+                    EC.presence_of_all_elements_located((By.TAG_NAME, "input"))
+                )
 
-        # 2️⃣ Preencher o formulário
-        inputs = wait.until(
-            EC.presence_of_all_elements_located((By.TAG_NAME, "input"))
-        )
+                for campo, valor in zip(inputs, DADOS):
+                    campo.send_keys(valor)
+                    time.sleep(0.1)
 
-        for campo, valor in zip(inputs, DADOS):
-            campo.send_keys(valor)
-            time.sleep(0.1)
+                # 3️⃣ Clicar no botão enviar
+                send_button = wait.until(
+                    EC.element_to_be_clickable((By.XPATH, "//button"))
+                )
+                driver.execute_script("arguments[0].click();", send_button)
+                print(f"✅ Formulário {i} enviado")
 
-        # 3️⃣ Clicar no botão enviar
-        botao_enviar = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "//button"))
-        )
-        driver.execute_script("arguments[0].click();", botao_enviar)
-        print(f"✅ Formulário {i} enviado")
+                # 4️⃣ Voltar para a aba da página base
+                driver.switch_to.window(driver.window_handles[0])
+                time.sleep(1)  # Pequena pausa para estabilidade
 
-        # 4️⃣ Voltar para a aba da página base
-        driver.switch_to.window(driver.window_handles[0])
-        time.sleep(1)  # Pequena pausa para estabilidade
+            print("🟢 Todos os formulários foram processados.")
+            print("🔵 O navegador permanecerá aberto para auditoria visual.")
 
-    print("🟢 Todos os formulários foram processados.")
-    print("🔵 O navegador permanecerá aberto para auditoria visual.")
+            # Mantém o navegador aberto indefinidamente
+            input("Pressione ENTER no terminal para encerrar o robô...")
+            
+            
+            salvar_dados(link_atual)
+            return True
+        else:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Nenhuma atualização")
+            return False
 
-    # Mantém o navegador aberto indefinidamente
-    input("Pressione ENTER no terminal para encerrar o robô...")
+    def monitorar_continuamente():
+        print("Iniciando monitoramento...")
+        while True:
+            try:
+                verificar_e_executar()
+            except Exception as e:
+                print(f"Erro: {e}")
+            
+            time.sleep(2)  # Aguarda 2 segundos antes da próxima verificação
+
+    # Executar
+    monitorar_continuamente()
+
+    
 
 except Exception as e:
     print("❌ Erro durante execução:", e)
