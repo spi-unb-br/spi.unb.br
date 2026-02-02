@@ -245,7 +245,6 @@ class BotFormulariosApp(ctk.CTk):
                 count = len(self.dados_usuario) - len(campos) + i
                 entry.insert(0, self.dados_usuario[count])
                 self.adicionar_log(f"Carregado {campos[i]}: {self.dados_usuario[count]}")
-                self.adicionar_log(f"{len(self.dados_usuario)}")
                 
             
             entries.append(entry)
@@ -292,8 +291,11 @@ class BotFormulariosApp(ctk.CTk):
             self.labels_dados[campo].configure(text=valor)
     def carregar_dados_usuario(self):
         """Carrega dados do usuário do arquivo"""
-        if os.path.exists('dados_usuario.json'):
-            with open('dados_usuario.json', 'r') as f:
+        arquivo_path = os.path.join(os.path.expanduser('~'), 'dados_usuario.json')
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(arquivo_path), exist_ok=True)
+        if os.path.exists(arquivo_path):
+            with open(arquivo_path, 'r') as f:
                 dados_arquivo = json.load(f)
                 self.dados_padrao.extend(dados_arquivo)
                 return self.dados_padrao
@@ -302,7 +304,8 @@ class BotFormulariosApp(ctk.CTk):
     
     def salvar_dados_usuario(self):
         """Salva dados do usuário em arquivo"""
-        with open('dados_usuario.json', 'w') as f:
+        arquivo_path = os.path.join(os.path.expanduser('~'), 'dados_usuario.json')
+        with open(arquivo_path, 'w') as f:
             json.dump(self.dados_usuario, f, indent=2)
     
     def adicionar_log(self, mensagem, cor="#ffffff"):
