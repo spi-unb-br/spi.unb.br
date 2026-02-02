@@ -25,6 +25,7 @@ class BotFormulariosApp(ctk.CTk):
         self.geometry("900x700")
         
         # Variáveis
+        self.dados_padrao = ["Luciana", "Freitas", "45994951404", "lmfreitas864@gmail.com"]
         self.dados_usuario = self.carregar_dados_usuario()
         self.driver = None
         self.wait = None
@@ -60,6 +61,8 @@ class BotFormulariosApp(ctk.CTk):
         # Criar labels para mostrar dados
         self.labels_dados = {}
         campos = ["Nome", "Sobrenome", "CPF", "Email", "Telefone", "DDD"]
+
+
         
         for i, campo in enumerate(campos):
             frame_linha = ctk.CTkFrame(frame_dados, fg_color="transparent")
@@ -81,6 +84,7 @@ class BotFormulariosApp(ctk.CTk):
             )
             label_valor.pack(side="left", fill="x", expand=True)
             self.labels_dados[campo] = label_valor
+
         
         # Botão atualizar dados
         btn_atualizar_dados = ctk.CTkButton(
@@ -114,14 +118,14 @@ class BotFormulariosApp(ctk.CTk):
             font=ctk.CTkFont(size=14, weight="bold")
         ).pack(side="left", padx=(0, 10))
         
-        self.entry_url = ctk.CTkEntry(
+        self.entry_url = ctk.CTkLabel(
             frame_url,
-            placeholder_text="https://exemplo.com",
             height=35,
-            font=ctk.CTkFont(size=13)
+            font=ctk.CTkFont(size=14),
+            anchor="w",
+            text=self.BASE_URL
         )
         self.entry_url.pack(side="left", fill="x", expand=True)
-        self.entry_url.insert(0, self.BASE_URL)
         
         # Botões de controle
         frame_botoes = ctk.CTkFrame(frame_controles, fg_color="transparent")
@@ -214,7 +218,7 @@ class BotFormulariosApp(ctk.CTk):
         ).pack(pady=20)
         
         # Campos de entrada
-        campos = ["Nome", "Sobrenome", "CPF", "Email", "Telefone", "DDD"]
+        campos = ["Telefone", "DDD"]
         entries = []
         
         for i, campo in enumerate(campos):
@@ -235,9 +239,14 @@ class BotFormulariosApp(ctk.CTk):
                 font=ctk.CTkFont(size=13)
             )
             entry.pack(side="left", fill="x", expand=True)
+
             
             if i < len(self.dados_usuario):
-                entry.insert(0, self.dados_usuario[i])
+                count = len(self.dados_usuario) - len(campos) + i
+                entry.insert(0, self.dados_usuario[count])
+                self.adicionar_log(f"Carregado {campos[i]}: {self.dados_usuario[count]}")
+                self.adicionar_log(f"{len(self.dados_usuario)}")
+                
             
             entries.append(entry)
         
@@ -277,16 +286,17 @@ class BotFormulariosApp(ctk.CTk):
     
     def atualizar_exibicao_dados(self):
         """Atualiza a exibição dos dados na interface"""
-        campos = ["Nome", "Sobrenome", "CPF", "Email", "Telefone", "DDD"]
+        campos = ["Telefone", "DDD"]
         for i, campo in enumerate(campos):
             valor = self.dados_usuario[i] if i < len(self.dados_usuario) else "---"
             self.labels_dados[campo].configure(text=valor)
-    
     def carregar_dados_usuario(self):
         """Carrega dados do usuário do arquivo"""
         if os.path.exists('dados_usuario.json'):
             with open('dados_usuario.json', 'r') as f:
-                return json.load(f)
+                # data = self.dados_padrao.append(json.load(f))
+                # data = json.load(f)
+                return self.dados_padrao.append(json.load(f))
         # Dados padrão
         return ["Luciana", "Freitas", "45994951404", "lmfreitas864@gmail.com", "991748889", "61"]
     
@@ -312,7 +322,6 @@ class BotFormulariosApp(ctk.CTk):
     
     def iniciar_bot(self):
         """Inicia o bot em uma thread separada"""
-        self.BASE_URL = self.entry_url.get().strip()
         
         if not self.BASE_URL:
             self.adicionar_log("❌ Por favor, insira a URL base!", "#ef4444")
