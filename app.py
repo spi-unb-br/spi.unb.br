@@ -78,7 +78,7 @@ class BotFormulariosApp(ctk.CTk):
             
             label_valor = ctk.CTkLabel(
                 frame_linha,
-                text=self.dados_usuario[i] if i < len(self.dados_usuario) else "---",
+                text=self.dados_usuario[i] if i < 6 else "---",
                 font=ctk.CTkFont(size=14),
                 anchor="w"
             )
@@ -294,9 +294,9 @@ class BotFormulariosApp(ctk.CTk):
         """Carrega dados do usuário do arquivo"""
         if os.path.exists('dados_usuario.json'):
             with open('dados_usuario.json', 'r') as f:
-                # data = self.dados_padrao.append(json.load(f))
-                # data = json.load(f)
-                return self.dados_padrao.append(json.load(f))
+                dados_arquivo = json.load(f)
+                self.dados_padrao.extend(dados_arquivo)
+                return self.dados_padrao
         # Dados padrão
         return ["Luciana", "Freitas", "45994951404", "lmfreitas864@gmail.com", "991748889", "61"]
     
