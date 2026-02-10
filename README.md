@@ -7,12 +7,14 @@ Sistema completo para monitoramento, extração e preenchimento automático de f
 ## 📋 Pré-requisitos
 
 ### Software Necessário
+
 - **Python 3.8+** instalado
 - **Google Chrome** instalado
 - **Visual Studio Code** (VSCode)
 - **Extensão Live Server** instalada no VSCode
 
 ### Bibliotecas Python
+
 ```bash
 pip install customtkinter selenium webdriver-manager
 ```
@@ -84,18 +86,21 @@ projeto/
 ### ✨ Principais Recursos
 
 #### 📋 Gerenciamento de Dados
+
 - ✅ Visualização clara dos dados cadastrados
 - ✅ Edição através de janela modal
 - ✅ Salvamento automático em JSON
 - ✅ Validação visual dos campos
 
 #### ⚙️ Controle do Bot
+
 - ✅ Iniciar/Parar monitoramento com um clique
 - ✅ URL configurável na interface
 - ✅ Execução em thread separada (não trava a UI)
 - ✅ Feedback visual do status atual
 
 #### 📊 Monitoramento em Tempo Real
+
 - ✅ Log detalhado com timestamps
 - ✅ Códigos de cores por tipo de mensagem
 - ✅ Scroll automático
@@ -103,6 +108,7 @@ projeto/
 - ✅ Contador de ciclos de verificação
 
 #### 🎯 Sistema de Cores do Log
+
 - 🟢 **Verde** (#22c55e) - Sucesso
 - 🔴 **Vermelho** (#ef4444) - Erro crítico
 - 🟠 **Laranja** (#f59e0b) - Aviso
@@ -115,27 +121,33 @@ projeto/
 ## 🔧 Versões Disponíveis
 
 ### 1. `bot_formularios_interface.py` - Interface Completa
+
 **Use quando:** Quiser usar o sistema completo com interface gráfica
 
 **Recursos:**
+
 - Interface gráfica moderna
 - Gerenciamento visual de dados
 - Log em tempo real
 - Controles intuitivos
 
 ### 2. `bot_teste_debug.py` - Versão Debug
+
 **Use quando:** Precisar testar ou debugar problemas
 
 **Recursos:**
+
 - Interface simplificada
 - Log ultra-detalhado
 - Passo a passo de cada operação
 - Ideal para identificar erros
 
 ### 3. `main.py` - Script Original
+
 **Use quando:** Preferir executar via terminal
 
 **Recursos:**
+
 - Execução direta no terminal
 - Configuração via código
 - Sem dependência de interface gráfica
@@ -145,15 +157,18 @@ projeto/
 ## 🛠️ Tecnologias utilizadas
 
 ### Backend
+
 - **Python 3.8+** - Linguagem principal
 - **Selenium** - Automação do navegador
 - **WebDriver Manager** - Gerenciamento automático do ChromeDriver
 
 ### Interface
+
 - **CustomTkinter** - Framework moderno para GUI
 - **Threading** - Execução assíncrona
 
 ### Desenvolvimento
+
 - **HTML/CSS** - Páginas de teste
 - **Live Server** - Servidor local para desenvolvimento
 
@@ -201,21 +216,27 @@ projeto/
 ## 🐛 Solução de Problemas
 
 ### ❌ "ChromeDriver não encontrado"
+
 **Solução:** O sistema baixa automaticamente. Verifique sua conexão com internet.
 
 ### ❌ "Erro ao iniciar Chrome"
+
 **Solução:** Certifique-se de que o Google Chrome está instalado no sistema.
 
 ### ❌ Interface não atualiza durante execução
+
 **Solução:** Isso é normal! O bot roda em thread separada. Acompanhe pelo log.
 
 ### ❌ "Formulário não encontrado"
+
 **Solução:** Ajuste a função `form_extract()` conforme a estrutura do seu site.
 
 ### ❌ Campos não preenchem corretamente
+
 **Solução:** Verifique se a ordem dos dados corresponde aos campos do formulário.
 
 ### 🔍 Como debugar:
+
 1. Execute `bot_teste_debug.py` primeiro
 2. Observe cada passo no log detalhado
 3. Identifique onde o erro ocorre
@@ -226,17 +247,20 @@ projeto/
 ## 💡 Dicas de Uso
 
 ### 🎯 Boas Práticas
+
 1. **Teste localmente primeiro** - Use o Live Server antes de ir para produção
 2. **Mantenha backups** - Salve `dados_usuario.json` regularmente
 3. **Acompanhe os logs** - Eles mostram exatamente o que está acontecendo
 4. **Use o modo debug** - Para identificar problemas rapidamente
 
 ### ⚡ Otimizações
+
 - Ajuste o `time.sleep(2)` no loop para verificações mais/menos frequentes
 - Modifique os timeouts do `WebDriverWait` conforme a velocidade do site
 - Adicione mais logs personalizados se necessário
 
 ### 🔒 Segurança
+
 - **NUNCA** compartilhe `dados_usuario.json` (contém dados pessoais)
 - Use apenas em sites onde você tem permissão
 - Respeite robots.txt e termos de uso dos sites
@@ -246,6 +270,7 @@ projeto/
 ## 📝 Customização
 
 ### Adicionar novos campos
+
 Edite as seguintes linhas:
 
 ```python
@@ -254,12 +279,14 @@ campos = ["Nome", "Sobrenome", "CPF", "Email", "Telefone", "DDD", "SEU_NOVO_CAMP
 ```
 
 ### Alterar cores da interface
+
 ```python
 # No início do arquivo
 ctk.set_default_color_theme("blue")  # Opções: "blue", "green", "dark-blue"
 ```
 
 ### Modificar intervalo de verificação
+
 ```python
 # Na função verificar_e_executar
 time.sleep(2)  # Altere para o tempo desejado em segundos
@@ -270,18 +297,13 @@ time.sleep(2)  # Altere para o tempo desejado em segundos
 ## 📦 Arquivos Gerados
 
 ### `dados_usuario.json`
+
 ```json
-[
-  "João",
-  "Silva",
-  "12345678900",
-  "joao@email.com",
-  "999999999",
-  "11"
-]
+["João", "Silva", "12345678900", "joao@email.com", "999999999", "11"]
 ```
 
 ### `dados.json`
+
 ```json
 {
   "ultimo_link": "https://exemplo.com/formulario",
@@ -289,11 +311,14 @@ time.sleep(2)  # Altere para o tempo desejado em segundos
 }
 ```
 
+criação do exe: pyinstaller bot_formularios.spec
+
 ---
 
 ## 🔄 Atualizações Recentes
 
 ### ✅ v2.0 - Interface Gráfica
+
 - ➕ Interface CustomTkinter completa
 - ➕ Gerenciamento visual de dados
 - ➕ Log em tempo real com cores
@@ -302,6 +327,7 @@ time.sleep(2)  # Altere para o tempo desejado em segundos
 - 🔄 Melhor tratamento de erros
 
 ### ✅ v1.0 - Versão Original
+
 - ➕ Script de linha de comando
 - ➕ Extração de formulários
 - ➕ Preenchimento automático
@@ -310,11 +336,13 @@ time.sleep(2)  # Altere para o tempo desejado em segundos
 ---
 
 ### Problemas conhecidos?
+
 1. Verifique os logs na interface
 2. Execute a versão debug
 3. Consulte a seção "Solução de Problemas"
 
 ### Quer contribuir?
+
 - Relate bugs encontrados
 - Sugira melhorias
 - Compartilhe casos de uso
@@ -330,6 +358,7 @@ Este projeto é de uso educacional e deve ser utilizado de forma ética e respon
 ## 🎓 Aprendizados
 
 Este projeto demonstra:
+
 - ✅ Automação web com Selenium
 - ✅ Interfaces gráficas modernas com CustomTkinter
 - ✅ Threading em Python

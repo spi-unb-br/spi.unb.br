@@ -22,6 +22,7 @@ class BotFormulariosApp(ctk.CTk):
         
         # Configuração da janela
         self.title("Bot de Formulários - Automação")
+        self.iconbitmap("icon.ico")
         self.geometry("900x700")
         
         # Variáveis
@@ -87,7 +88,7 @@ class BotFormulariosApp(ctk.CTk):
 
         
         # Botão atualizar dados
-        btn_atualizar_dados = ctk.CTkButton(
+        self.btn_atualizar_dados = ctk.CTkButton(
             frame_dados,
             text="✏️ Atualizar Dados",
             command=self.abrir_janela_edicao,
@@ -96,7 +97,7 @@ class BotFormulariosApp(ctk.CTk):
             fg_color="#f59e0b",
             hover_color="#d97706"
         )
-        btn_atualizar_dados.pack(pady=15)
+        self.btn_atualizar_dados.pack(pady=15)
         
         # ========== SEÇÃO: CONTROLES ==========
         frame_controles = ctk.CTkFrame(main_container, corner_radius=15)
@@ -289,9 +290,13 @@ class BotFormulariosApp(ctk.CTk):
         for i, campo in enumerate(campos):
             valor = self.dados_usuario[i] if i < len(self.dados_usuario) else "---"
             self.labels_dados[campo].configure(text=valor)
+    
     def carregar_dados_usuario(self):
         """Carrega dados do usuário do arquivo"""
-        arquivo_path = os.path.join(os.path.expanduser('~'), 'dados_usuario.json')
+        dir_form_data = os.path.join(os.path.expanduser('~'), 'form_data')
+        if not os.path.exists(dir_form_data):
+            os.makedirs(dir_form_data, exist_ok=True)
+        arquivo_path = os.path.join(dir_form_data, 'dados_usuario.json')
         # Ensure the directory exists
         os.makedirs(os.path.dirname(arquivo_path), exist_ok=True)
         if os.path.exists(arquivo_path):
@@ -304,7 +309,10 @@ class BotFormulariosApp(ctk.CTk):
     
     def salvar_dados_usuario(self):
         """Salva dados do usuário em arquivo"""
-        arquivo_path = os.path.join(os.path.expanduser('~'), 'dados_usuario.json')
+        dir_form_data = os.path.join(os.path.expanduser('~'), 'form_data')
+        if not os.path.exists(dir_form_data):
+            os.makedirs(dir_form_data, exist_ok=True)
+        arquivo_path = os.path.join(dir_form_data, 'dados_usuario.json')
         with open(arquivo_path, 'w') as f:
             json.dump(self.dados_usuario, f, indent=2)
     
@@ -336,6 +344,7 @@ class BotFormulariosApp(ctk.CTk):
         
         self.bot_ativo = True
         self.btn_iniciar.configure(state="disabled")
+        self.btn_atualizar_dados.configure(state="disabled")
         self.btn_parar.configure(state="normal")
         
         # Inicia bot em thread separada
@@ -346,6 +355,7 @@ class BotFormulariosApp(ctk.CTk):
         """Para a execução do bot"""
         self.bot_ativo = False
         self.btn_iniciar.configure(state="normal")
+        self.btn_atualizar_dados.configure(state="normal")
         self.btn_parar.configure(state="disabled")
         self.atualizar_status("⏸️ Bot pausado", "#f59e0b")
         self.adicionar_log("⏹️ Bot parado pelo usuário", "#f59e0b")
@@ -505,7 +515,7 @@ class BotFormulariosApp(ctk.CTk):
                         EC.presence_of_all_elements_located((By.TAG_NAME, "input"))
                     )
                     
-                    for campo, valor in zip(inputs, self.dados_usuario):
+                    for campo, valor in zip(inputs, self.dados_padrao):
                         campo.send_keys(valor)
                         time.sleep(0.1)
                     
@@ -537,8 +547,10 @@ class BotFormulariosApp(ctk.CTk):
     
     def ler_dados(self, arquivo='dados.json'):
         """Lê dados do arquivo de controle"""
-        if os.path.exists(arquivo):
-            with open(arquivo, 'r') as f:
+        dir_form_data = os.path.join(os.path.expanduser('~'), 'form_data')
+        arquivo_path = os.path.join(dir_form_data, arquivo)
+        if os.path.exists(arquivo_path):
+            with open(arquivo_path, 'r') as f:
                 return json.load(f)
         return {'ultimo_link': None, 'ultima_atualizacao': None}
     
@@ -548,7 +560,13 @@ class BotFormulariosApp(ctk.CTk):
             'ultimo_link': link,
             'ultima_atualizacao': datetime.now().isoformat()
         }
-        with open(arquivo, 'w') as f:
+        
+        dir_form_data = os.path.join(os.path.expanduser('~'), 'form_data')
+        if not os.path.exists(dir_form_data):
+            os.makedirs(dir_form_data, exist_ok=True)
+        
+        arquivo_path = os.path.join(dir_form_data, arquivo)
+        with open(arquivo_path, 'w') as f:
             json.dump(dados, f, indent=2)
 
 
