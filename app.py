@@ -31,7 +31,8 @@ class BotFormulariosApp(ctk.CTk):
         self.driver = None
         self.wait = None
         self.bot_ativo = False
-        self.BASE_URL = "http://127.0.0.1:5500/html/index.html"  # Altere para sua URL
+        # self.BASE_URL = "http://127.0.0.1:5500/html/index.html"  # Altere para sua URL
+        self.BASE_URL = "https://sites.google.com/view/spi-imoveis/"  # Altere para sua URL
         
         # Criar interface
         self.criar_interface()
