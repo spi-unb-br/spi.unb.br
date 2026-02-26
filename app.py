@@ -8,6 +8,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import json
 import os
+import sys
+import ctypes
 from datetime import datetime
 import threading
 
@@ -16,13 +18,21 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 
+def resource_path(relative_path):
+    base_path = getattr(sys, "_MEIPASS", os.path.abspath("."))
+    return os.path.join(base_path, relative_path)
+
+
 class BotFormulariosApp(ctk.CTk):
     def __init__(self):
         super().__init__()
+
+        if os.name == "nt":
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("spi.pluto.app")
         
         # Configuração da janela
         self.title("Bot de Formulários - Automação")
-        self.iconbitmap("icon.ico")
+        self.iconbitmap(resource_path("icon.ico"))
         self.geometry("900x700")
         
         # Variáveis
