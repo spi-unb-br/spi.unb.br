@@ -294,6 +294,11 @@ time.sleep(2)  # Altere para o tempo desejado em segundos
 
 ---
 
+## Gerar exe:
+```
+   python -m PyInstaller app.spec --clean
+```
+
 ## 📦 Arquivos Gerados
 
 ### `dados_usuario.json`
